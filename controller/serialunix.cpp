@@ -76,6 +76,7 @@ public:
     void disconnect() {
         if (this->isConnected()) {
             close(this->port);
+            printf("Closing port\n");
             this->connected = false;
         }
     }
