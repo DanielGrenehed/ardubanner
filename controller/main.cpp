@@ -1,6 +1,7 @@
 #include "serial.hpp"
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 int main(int argc, char **argv) {
     if (argc == 1) {
@@ -11,7 +12,8 @@ int main(int argc, char **argv) {
     const char message[] = "ON:1000&ON:5000&ON:2000";
     if (port->isConnected()) {
         printf("writing to port\n");
-        port->writeToPort(message, sizeof(message));
+        if (argc == 3) port->writeToPort(argv[2], strlen(argv[2]));
+        else port->writeToPort(message, sizeof(message));
     }
   
     delete port;

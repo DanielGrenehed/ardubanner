@@ -26,7 +26,6 @@ void setup() {
 }
 
 void loop() {
-
   readSerial();
     
   updateDisplay();
@@ -39,7 +38,7 @@ void readSerial() {
     char input[INPUT_SIZE + 1];
     byte size = Serial.readBytes(input, INPUT_SIZE);
     input[size] = 0; // Add the final 0 to end the C string
-    
+
     if (size > 0) {
       printString(input);
       processInput(input);
@@ -60,7 +59,7 @@ void processInput(const char *input) {
           ++separator;
           int timeArg = atoi(separator);
           if (strcmp(command, "ON") == 0) {
-            blinkLED(timearg);
+            blinkLED(timeArg);
             delay(1000); //random delay number between commands.
           }
           // Do something with servoId and position
