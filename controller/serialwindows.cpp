@@ -2,15 +2,14 @@
 #include <windows.h>
 #include <iostream>
 
-class WindowsSerial
-{
+class WindowsSerial: public Serial {
 private:
     HANDLE handler;
     bool connected;
     COMSTAT status;
     DWORD errors;
 public:
-    SerialPort(const char *portName) {
+    WindowsSerial(const char *portName) {
         this->connected = false;
 
         this->handler = CreateFileA(static_cast<LPCSTR>(portName),
@@ -49,11 +48,11 @@ public:
         }
     }
 
-    ~SerialPort() {
+    ~WindowsSerial() {
         disconnect();
     }
 
-    int readFromPort(const char *buffer, unsigned int buf_size) {
+    int readFromPort(char *buffer, unsigned int buf_size) {
         DWORD bytesRead{};
         unsigned int toRead = 0;
 
@@ -94,7 +93,7 @@ public:
 
     void disconnect() {
         if (isConnected()) {
-            CloseHandle(handle);
+            CloseHandle(handler);
             connected = false;
         }
     }
@@ -104,3 +103,4 @@ Serial* CreateSerialConnection(const char *portname) {
     WindowsSerial *serial = new WindowsSerial(portname);
     return serial;
 }
+
