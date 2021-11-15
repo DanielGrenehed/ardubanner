@@ -1,5 +1,5 @@
 #include "display.hpp"
-#include <arduino.h>
+//
 
 
 Display::Display(int columns, int rows, uint8_t rs, uint8_t enable, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7) : lines(new String[rows]), lineOffsets(new int[rows]), m_lcd(rs, enable, d4, d5, d6, d7) {

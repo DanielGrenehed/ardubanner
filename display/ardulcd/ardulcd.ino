@@ -46,7 +46,7 @@ void readSerial() {
   }
 }
 
-void processInput(const char *input) {
+void processInput(char *input) {
   const char *delim = "&";
   // Read each command pair 
   char* command = strtok(input, delim);
