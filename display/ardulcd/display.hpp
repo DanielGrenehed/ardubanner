@@ -2,7 +2,7 @@
 #define DISPLAY_HPP
 #include <LiquidCrystal.h>
 
-#define MAX_STR_LEN 60
+#define MAX_STR_LEN 30
 
 class Display {
 private:
