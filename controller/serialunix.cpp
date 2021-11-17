@@ -84,7 +84,7 @@ public:
 
 
 
-std::unique_ptr<Serial> CreateSerialConnection(const char *portname) {
-    std::unique_ptr<UnixSerial> serial (new UnixSerial(portname));
+std::shared_ptr<Serial> CreateSerialConnection(const char *portname) {
+    std::shared_ptr<UnixSerial> serial (new UnixSerial(portname));
     return serial;
 }

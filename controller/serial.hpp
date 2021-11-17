@@ -15,6 +15,6 @@ public:
     virtual void disconnect() = 0;
 };
 
-std::unique_ptr<Serial> CreateSerialConnection(const char *portname);
+std::shared_ptr<Serial> CreateSerialConnection(const char *portname);
 
 #endif /* ifndef SERIAL_HPP */

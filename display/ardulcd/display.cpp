@@ -71,7 +71,7 @@ void Display::printLine(int i) {
     int spaces = spacing;
     if (offset > linelength) spaces = spacing - (offset - linelength);
     
-    for (int j = 0; j < spaces; j++) line += " ";
+    for (int j = 0; j < spaces; j++) line += " "; // Add spaces
     line += lines[i].substring(0, offset);
     
     m_lcd.setCursor(0, i);

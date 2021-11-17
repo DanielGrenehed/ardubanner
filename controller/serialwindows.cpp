@@ -99,8 +99,8 @@ public:
     }
 };
 
-std::unique_ptr<Serial> CreateSerialConnection(const char *portname) {
-    std::unique_ptr<WindowsSerial> serial (new WindowsSerial(portname));
+std::shared_ptr<Serial> CreateSerialConnection(const char *portname) {
+    std::shared_ptr<WindowsSerial> serial (new WindowsSerial(portname));
     return serial;
 }
 
