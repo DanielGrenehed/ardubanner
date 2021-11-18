@@ -28,6 +28,7 @@ Setup
 void setup() {
   Serial.begin(BAUD);
   pinMode(led, OUTPUT);
+  disp.setMessage(msghand.Message());
   disp.update();
 }
 
@@ -35,10 +36,6 @@ void loop() {
   readSerial();
     
   updateDisplay();
-  //char cstr[16];
-  //itoa(msghand.getSize(), cstr, 10);
-  //printString(cstr);
-  //blinkLED(10);
 }
 
 void readSerial() {
@@ -86,13 +83,14 @@ void readMessageFromSerial() {
     if (str2 != 0) {
       *str2 = 0;
       ++str2;
-      if (!msghand.addMessage(time, token, str2)) printString("Failed to add message");
+      if (!msghand.addMessage(time, token, str2));
     } else {
-      if (!msghand.addMessage(time, token, "")) printString("Faild to add message");
+      if (!msghand.addMessage(time, token, ""));
     }
   }
 
 }
+
 void updateDisplay() {
   unsigned long time = millis();
   nextMessage(time);
@@ -100,22 +98,19 @@ void updateDisplay() {
     disp.scroll();
     disp.update();
     lastTime = time;
-  
   }
 }
 
 
-
 void nextMessage(unsigned long time) {
-  if (msghand.shouldUpdate(time) && !msghand.isEmpty()) {
-    msghand.nextMessage(time);
-    disp.setLine(msghand.firstLine(), 0);
-    disp.setLine(msghand.secondLine(), 1);
+  /// update display only when there is a new message to be displayed
+  if (msghand.update(time)) {
+    disp.setMessage(msghand.Message());
     disp.update();
   }
 }
 
-void printString(const char *str) {
+/* void printString(const char *str) {
   disp.setLine(str, 0);
   disp.update();
 }
@@ -124,4 +119,4 @@ void blinkLED(int millis) {
   digitalWrite(led, HIGH);
   delay(millis);
   digitalWrite(led, LOW);
-}
+} */

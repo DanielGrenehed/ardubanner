@@ -4,24 +4,43 @@
 const char* MessageHandler::firstLine() {
     return messages[current].line1;
 }
+
 const char* MessageHandler::secondLine() {
     return messages[current].line2;
 }
+
+const Message* MessageHandler::Message() {
+    return &messages[current];
+}
+
 bool MessageHandler::isEmpty() {
     return size == 0;
 }
+
 int MessageHandler::getSize() {
     return size;
 }
+
 void MessageHandler::nextMessage(unsigned long time) {
     current++;
     if (current >= size) current = 0;
-    lastChange = time;
 }
-bool MessageHandler::shouldUpdate(unsigned long time) {
+
+bool MessageHandler::update(unsigned long time) {
     if (size == 0) return false;
-    return (time > (lastChange + messages[current].displayTime));
+    if (size == 1 && lastChange == 0) {
+        current = 0;
+        lastChange = time;
+        return true;
+    }
+    if (time >= (lastChange + messages[current].displayTime) && size > 1) {
+        lastChange = time;
+        nextMessage(time);
+        return true;
+    }
+    return false;
 }
+
 void MessageHandler::reset() {
     size = 0;
     current = 0;

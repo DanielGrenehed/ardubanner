@@ -1,9 +1,12 @@
 #include "messaghandler.hpp"
+#include <iostream>
 
+#define MAX_MESSAGES 12
+const float min_persent = 1.0/MAX_MESSAGES;
 
 bool MessageHandler::addMessage(int ammount, std::string msg) {
     // is ammount enough to display message
-    if ((((float)ammount)/(sum_paid+ammount)) >= 0.05) {
+    if ((((float)ammount)/(sum_paid+ammount)) >= min_persent) {
         messages.push_back(Message(ammount, msg));
         sum_paid += ammount;
     } else {
@@ -13,10 +16,11 @@ bool MessageHandler::addMessage(int ammount, std::string msg) {
 }
 
 void MessageHandler::removeZeroTimeMessages() {
+    std::cout << min_persent << std::endl;
     int sum_deleted = 0;
     for (int i = 0; i < messages.size(); i++) {
         int ammount = messages[i].getAmmount();
-        if ((((float)ammount)/(sum_paid)) < 0.05) {
+        if ((((float)ammount)/(sum_paid)) < min_persent) {
             sum_deleted += ammount;
             messages.erase(messages.begin()+i);
             i--;

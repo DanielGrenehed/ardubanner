@@ -1,27 +1,21 @@
 #ifndef MESSAGEHANDLER_HPP
 #define MESSAGEHANDLER_HPP
 
-#include "util.hpp"
-
-struct Message {
-  int displayTime;
-  char line1[MAX_STR_LEN], line2[MAX_STR_LEN]; 
-};
-
+#include "message.h"
 
 class MessageHandler {
 private:
   Message messages[MAX_MESSAGES];
   int size = 0 , current = 0;
   unsigned long lastChange = 0;
-
+  void nextMessage(unsigned long time);
 public:
   const char* firstLine();
   const char* secondLine();
+  const Message* Message();
   bool isEmpty();
   int getSize();
-  void nextMessage(unsigned long time);
-  bool shouldUpdate(unsigned long time);
+  bool update(unsigned long time);
   void reset();
   bool addMessage(int time, char* l1, char* l2);
 };

@@ -2,22 +2,19 @@
 //
 
 
-Display::Display(int columns, int rows, uint8_t rs, uint8_t enable, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7) : lines(new String[rows]), lineOffsets(new int[rows]), m_lcd(rs, enable, d4, d5, d6, d7) {
+Display::Display(int columns, int rows, uint8_t rs, uint8_t enable, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7) : lineOffsets(new int[rows]), m_lcd(rs, enable, d4, d5, d6, d7) {
     this->cols = columns;
     this->rows = rows;
     m_lcd.begin(cols, rows);
     reset();
 }
 
-void Display::setLine(String msg, int row) {
-    lines[row] = msg;
-    lineOffsets[row] = 0;
+void Display::setMessage(Message* msg) {
+    message = msg;
+    reset();
 }
 
 void Display::reset() {
-    for (int i = 0; i < rows; i++) {
-        lines[i] = "";
-    }
     resetScroll();
     clear();
 }
@@ -34,20 +31,19 @@ void Display::update() {
 }
 
 void Display::scroll() {
-    for (int i = 0; i < rows; i++) {
-      if (lines[i].length() > cols) {
-
-        if (lineOffsets[i] >= (lines[i].length()-1)+spacing) lineOffsets[i] = 0;
-        else lineOffsets[i] += 1;
-        
-      }
-    }
+    if (strlen(message->line1) > cols) {
+        if (lineOffsets[0] >= (strlen(message->line1)-1)+spacing) lineOffsets[0] = 0;
+        else lineOffsets[0] += 1;
+    } 
+    if (strlen(message->line2) > cols) {
+        if (lineOffsets[1] >= (strlen(message->line2)-1)+spacing) lineOffsets[1] = 0;
+        else lineOffsets[1] += 1;
+    } 
 }
 
 bool Display::isScrollable() {
-    for (int i = 0; i < rows; i++) {
-      if (lines[i].length()  > cols) return true;
-    }
+    if (strlen(message->line1) > cols) return true;
+    if (strlen(message->line2) > cols) return true;
     return false;
 }
 
@@ -63,16 +59,17 @@ void Display::resetScroll() {
 }
 
 void Display::printLine(int i) {
-    int linelength = lines[i].length();
+    String cline = i == 0 ? message->line1 : message->line2;
+    int linelength = cline.length();
     int offset = lineOffsets[i];
      
-    String line = lines[i].substring(offset);
+    String line = cline.substring(offset);
       
     int spaces = spacing;
     if (offset > linelength) spaces = spacing - (offset - linelength);
     
     for (int j = 0; j < spaces; j++) line += " "; // Add spaces
-    line += lines[i].substring(0, offset);
+    line += cline.substring(0, offset);
     
     m_lcd.setCursor(0, i);
     m_lcd.print(line); 
