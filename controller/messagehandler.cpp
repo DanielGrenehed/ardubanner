@@ -1,5 +1,4 @@
 #include "messaghandler.hpp"
-#include <iostream>
 
 #define MAX_MESSAGES 12
 const float min_persent = 1.0/MAX_MESSAGES;
@@ -16,7 +15,6 @@ bool MessageHandler::addMessage(int ammount, std::string msg) {
 }
 
 void MessageHandler::removeZeroTimeMessages() {
-    std::cout << min_persent << std::endl;
     int sum_deleted = 0;
     for (int i = 0; i < messages.size(); i++) {
         int ammount = messages[i].getAmmount();
@@ -32,10 +30,9 @@ void MessageHandler::removeZeroTimeMessages() {
 std::vector<std::string> MessageHandler::serializeCommands() {
     std::vector<std::string> commands;
     removeZeroTimeMessages();
-    for (Message m : messages) {
-        // construct time:message
-        int time = (((float)m.getAmmount())/(sum_paid)) * 60;
-        std::string command = std::to_string(time) + ":" + m.getText();
+    for(std::vector<Message>::iterator it = messages.begin(); it != messages.end(); ++it) {
+        int time = (((float)it->getAmmount())/(sum_paid)) * 60;
+        std::string command = std::to_string(time) + ":" + it->getText();
         commands.push_back(command);
     }
     return commands;

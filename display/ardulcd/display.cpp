@@ -72,5 +72,12 @@ void Display::printLine(int i) {
     line += cline.substring(0, offset);
     
     m_lcd.setCursor(0, i);
-    m_lcd.print(line); 
+    if (i < 2) m_lcd.print(line); 
+    else m_lcd.print("");
 }
+/*
+void Display::printMessage(const char* line, int row) {
+    char out[cols+1];
+    int pos= 0;
+
+} */

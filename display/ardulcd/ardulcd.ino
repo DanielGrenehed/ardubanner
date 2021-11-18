@@ -6,16 +6,17 @@
 #define INPUT_SIZE 100
 
 
-#define DISPLAY_WIDTH 16
-#define DISPLAY_HEIGHT 2
+#define DISPLAY_WIDTH 20
+#define DISPLAY_HEIGHT 4
 
 /*
 
 Global variables
 
 */
-Display disp(DISPLAY_WIDTH, DISPLAY_HEIGHT, 12, 11, 5, 4, 3, 2);
 
+Display disp(DISPLAY_WIDTH, DISPLAY_HEIGHT, 12, 11, 5, 4, 3, 2);
+// Display disp(DISPLAY_WIDTH, DISPLAY_HEIGHT, lcd);
 MessageHandler msghand;
 unsigned long lastTime = 0;
 

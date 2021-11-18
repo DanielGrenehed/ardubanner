@@ -12,7 +12,7 @@ private:
 public:
   const char* firstLine();
   const char* secondLine();
-  const Message* Message();
+  Message* Message();
   bool isEmpty();
   int getSize();
   bool update(unsigned long time);

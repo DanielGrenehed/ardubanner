@@ -9,7 +9,7 @@ const char* MessageHandler::secondLine() {
     return messages[current].line2;
 }
 
-const Message* MessageHandler::Message() {
+Message* MessageHandler::Message() {
     return &messages[current];
 }
 

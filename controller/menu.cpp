@@ -51,23 +51,25 @@ void Menu::addMessage() {
 void Menu::updateSerial() {
     std::vector<std::string> commands = msghand.serializeCommands();
     std::string header = "U:"+ std::to_string(commands.size());
-    for (std::shared_ptr<Serial> s: ports) {
-        std::shuffle(commands.begin(), commands.end(), std::default_random_engine());
+    std::default_random_engine e(0);
+    for (std::vector<std::shared_ptr<Serial> >::iterator pit = ports.begin(); pit != ports.end(); ++pit) {
+        //std::shuffle(commands.begin(), commands.end(), std::default_random_engine());
+        std::shuffle(commands.begin(), commands.end(), e);
 
         char tmp[256];
         strcpy(tmp, header.c_str());
         tmp[header.size()] = '\n';
         tmp[header.size()+1] = 0;
-        s->writeToPort(tmp, strlen(tmp));
+        (*pit)->writeToPort(tmp, strlen(tmp));
         std::cout << tmp;
         
-        for (std::string msg: commands) {
+        for (std::vector<std::string>::iterator it = commands.begin(); it != commands.end(); ++it) {
 
             char temp[256];
-            strcpy(temp, msg.c_str());
-            temp[msg.size()] = '\n';
-            temp[msg.size()+1] = 0;
-            s->writeToPort(temp, strlen(temp));
+            strcpy(temp, it->c_str());
+            temp[it->size()] = '\n';
+            temp[it->size()+1] = 0;
+            (*pit)->writeToPort(temp, strlen(temp));
             std::cout << temp;
         }
     }

@@ -13,7 +13,7 @@ private:
     std::string msg;
     int paid;
 public:
-    Message(int ammount, std::string message): paid(ammount), msg(message) {}
+    Message(int ammount, std::string message): msg(message), paid(ammount){}
     
     std::string getText() {return msg;}
     int getAmmount() {return paid;}
