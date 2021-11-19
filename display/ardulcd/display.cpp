@@ -33,16 +33,7 @@ void Display::scroll() {
             if (lineOffsets[i] >= (strlen(lines[i].text)-1)+spacing) lineOffsets[i] = 0;
             else lineOffsets[i] += 1;
         }
-    } /* 
-    }
-    if (strlen(message->line1) > cols) {
-        if (lineOffsets[0] >= (strlen(message->line1)-1)+spacing) lineOffsets[0] = 0;
-        else lineOffsets[0] += 1;
     } 
-    if (strlen(message->line2) > cols) {
-        if (lineOffsets[1] >= (strlen(message->line2)-1)+spacing) lineOffsets[1] = 0;
-        else lineOffsets[1] += 1;
-    }  */
 }
 
 bool Display::isScrollable() {
@@ -72,21 +63,6 @@ void Display::resetScroll() {
 void Display::printLine(int i) {
     if (i >= cols) return;
     printMessage(lines[i].text, i);
-    /* String cline = i == 0 ? message->line1 : message->line2;
-    int linelength = cline.length();
-    int offset = lineOffsets[i];
-     
-    String line = cline.substring(offset);
-      
-    int spaces = spacing;
-    if (offset > linelength) spaces = spacing - (offset - linelength);
-    
-    for (int j = 0; j < spaces; j++) line += " "; // Add spaces
-    line += cline.substring(0, offset);
-    
-    m_lcd.setCursor(0, i);
-    if (i < 2) m_lcd.print(line); 
-    else m_lcd.print(""); */
 }
 
 void Display::printMessage(const char* line, int row) {
@@ -96,7 +72,9 @@ void Display::printMessage(const char* line, int row) {
 
     for (int i = lineOffsets[row]; pos < cols && i < strlen(line); i++) out[pos++] = line[i];
     if (lineOffsets[row] > 0) {
-        for (int i = 0; pos < cols && i < spacing; i++) out[pos++] = ' ';
+        int spaces = spacing;
+        if (lineOffsets[row] > strlen(line)) spaces = spacing - (lineOffsets[row] - strlen(line));
+        for (int i = 0; pos < cols && i < spaces; i++) out[pos++] = ' ';
         for (int i = 0; pos < cols && i < strlen(line); i++) out[pos++] = line[i];
     }
     for (;pos < cols;) out[pos++] = ' ';
