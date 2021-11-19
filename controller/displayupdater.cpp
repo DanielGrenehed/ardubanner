@@ -2,6 +2,7 @@
 #include <chrono>
 #include <thread>
 #include <sstream>
+#include <cstring>
 
 void DisplayUpdater::setData(std::vector<TimedMessage>& newdata) {
     std::lock_guard<std::mutex> lock(mut);

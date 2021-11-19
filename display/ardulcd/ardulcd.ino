@@ -14,7 +14,7 @@ Global variables
 
 */
 
-Display disp(DISPLAY_WIDTH, DISPLAY_HEIGHT, 12, 11, 5, 4, 3, 2);
+Display disp(DISPLAY_WIDTH, DISPLAY_HEIGHT, 0x27);
 unsigned long lastTime = 0;
 
 
@@ -26,6 +26,7 @@ Setup
 void setup() {
   Serial.begin(BAUD);
   pinMode(led, OUTPUT);
+  disp.initDisplay();
   disp.update();
 }
 

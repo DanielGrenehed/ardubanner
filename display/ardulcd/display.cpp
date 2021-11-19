@@ -2,10 +2,14 @@
 //
 
 
-Display::Display(int columns, int rows, uint8_t rs, uint8_t enable, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7) : lines(new Line[rows]), lineOffsets(new int[rows]), m_lcd(rs, enable, d4, d5, d6, d7) {
+Display::Display(int columns, int rows, int adress) : lines(new Line[rows]), lineOffsets(new int[rows]), m_lcd(adress, columns, rows) {
     this->cols = columns;
     this->rows = rows;
-    m_lcd.begin(cols, rows);
+}
+
+void Display::initDisplay(){
+    m_lcd.begin();
+    m_lcd.backlight();
     reset();
 }
 
@@ -80,5 +84,5 @@ void Display::printMessage(const char* line, int row) {
     for (;pos < cols;) out[pos++] = ' ';
     
     m_lcd.setCursor(0, row);
-    m_lcd.print(out);
+    m_lcd.printstr(out);
 } 

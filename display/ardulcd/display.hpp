@@ -1,6 +1,6 @@
 #ifndef DISPLAY_HPP
 #define DISPLAY_HPP
-#include <LiquidCrystal.h>
+#include <LiquidCrystal_I2C.h>
 
 #include "util.hpp"
 
@@ -13,10 +13,12 @@ private:
   int cols, rows, spacing = 3;
   Line* lines;
   signed int* lineOffsets;
-  LiquidCrystal m_lcd;
+  LiquidCrystal_I2C m_lcd;
 
 public:
-  Display(int columns, int rows, uint8_t rs, uint8_t enable, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
+  Display(int columns, int rows, int adress);
+
+  void initDisplay();
 
   void reset();
 
