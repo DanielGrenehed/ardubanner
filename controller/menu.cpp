@@ -76,8 +76,15 @@ void Menu::addMessage() {
         return;
     }
 
-    msghand.addMessage(ammount, text);
-    updateSerial();
+    if(msghand.addMessage(ammount, text)){
+       updateSerial(); 
+       std::cout << "Ad succesfully added\n";
+
+    } else{
+        std::cout << "Ad was not succesfully added, minimum price not reached\n";
+    }
+    
+    
 }
 
 void Menu::updateSerial() {

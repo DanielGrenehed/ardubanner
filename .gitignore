@@ -4,3 +4,4 @@ display/clicompile.sh
 controller/a.out
 .vscode/
 .DS_Store
+controller/a.exe
