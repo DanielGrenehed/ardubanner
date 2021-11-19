@@ -12,6 +12,8 @@ Display::Display(int columns, int rows, uint8_t rs, uint8_t enable, uint8_t d4, 
 void Display::reset() {
     resetScroll();
     clear();
+    char zero[]="";
+    for (int i = 0; i < cols; i++) setLine(zero, i);
 }
 
 void Display::clear() {
@@ -58,6 +60,7 @@ bool Display::setLine(const char* text, int rw) {
     if (strlen(text) > MAX_STR_LEN || rw >= cols) return false;
     strcpy(lines[rw].text, text);
     lines[rw].text[MAX_STR_LEN-1] = 0;
+    lineOffsets[rw] = 0;
 }
 
 void Display::resetScroll() {

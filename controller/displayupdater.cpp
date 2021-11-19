@@ -52,18 +52,29 @@ static void printMessage(std::string msg, std::shared_ptr<Serial> out) {
 
 void UpdateDisplay(std::shared_ptr<DisplayUpdater> messages, std::shared_ptr<Serial> out) {
     int index = 0;
+    std::chrono::system_clock::time_point next_update = std::chrono::system_clock::now();
     while (!messages->shouldStop()) {
         if (messages->getSize() == 0) {
             std::this_thread::sleep_for(std::chrono::seconds(1));
             continue;
         }
+        std::chrono::system_clock::time_point time = std::chrono::system_clock::now();
+        if(messages->hasUpdated()) { 
+            index = 0;
+            next_update = time;
+        } 
         
-        if(messages->hasUpdated() || index >= messages->getSize())  index = 0; 
-       
-        const TimedMessage& msg = messages->getMessage(index);
+        // only update when time has exeeded
+        if (time >= next_update) {
+            const TimedMessage& msg = messages->getMessage(index);
          // print message
-        printMessage(msg.msg, out);
-        std::this_thread::sleep_for(std::chrono::seconds(msg.time));
-        index++;
+            printMessage(msg.msg, out);
+            next_update = time + std::chrono::seconds(msg.time);
+            
+            index++;
+            if (index >= messages->getSize()) index = 0;
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        
     }
 }
