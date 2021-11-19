@@ -69,6 +69,7 @@ void Menu::addMessage() {
         std::cout << "Your text is exceeding the limits\n";
         return;
     }
+    std::cout << "Enter second line:\n";
     text += '|' + getLine(success);
     if (!success) {
         std::cout << "Your text is exceeding the limits\n";
