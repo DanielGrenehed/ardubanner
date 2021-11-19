@@ -2,15 +2,10 @@
 //
 
 
-Display::Display(int columns, int rows, uint8_t rs, uint8_t enable, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7) : lineOffsets(new int[rows]), m_lcd(rs, enable, d4, d5, d6, d7) {
+Display::Display(int columns, int rows, uint8_t rs, uint8_t enable, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7) : lines(new Line[rows]), lineOffsets(new int[rows]), m_lcd(rs, enable, d4, d5, d6, d7) {
     this->cols = columns;
     this->rows = rows;
     m_lcd.begin(cols, rows);
-    reset();
-}
-
-void Display::setMessage(Message* msg) {
-    message = msg;
     reset();
 }
 
@@ -31,6 +26,13 @@ void Display::update() {
 }
 
 void Display::scroll() {
+    for (int i = 0; i < rows; i++) {
+        if (strlen(lines[i].text) > cols) {
+            if (lineOffsets[i] >= (strlen(lines[i].text)-1)+spacing) lineOffsets[i] = 0;
+            else lineOffsets[i] += 1;
+        }
+    } /* 
+    }
     if (strlen(message->line1) > cols) {
         if (lineOffsets[0] >= (strlen(message->line1)-1)+spacing) lineOffsets[0] = 0;
         else lineOffsets[0] += 1;
@@ -38,12 +40,13 @@ void Display::scroll() {
     if (strlen(message->line2) > cols) {
         if (lineOffsets[1] >= (strlen(message->line2)-1)+spacing) lineOffsets[1] = 0;
         else lineOffsets[1] += 1;
-    } 
+    }  */
 }
 
 bool Display::isScrollable() {
-    if (strlen(message->line1) > cols) return true;
-    if (strlen(message->line2) > cols) return true;
+    for (int i = 0; i < rows; i++) {
+        if (strlen(lines[i].text) > cols) return true;
+    }
     return false;
 }
 
@@ -51,6 +54,11 @@ void Display::setWrapSpacing(int s) {
     spacing = s;
 }
   
+bool Display::setLine(const char* text, int rw) {
+    if (strlen(text) > MAX_STR_LEN || rw >= cols) return false;
+    strcpy(lines[rw].text, text);
+    lines[rw].text[MAX_STR_LEN-1] = 0;
+}
 
 void Display::resetScroll() {
     for (int i = 0; i < rows; i++) {
@@ -59,11 +67,8 @@ void Display::resetScroll() {
 }
 
 void Display::printLine(int i) {
-    if (i == 0) {
-        printMessage(message->line1, i);
-    } else if (i == 1) {
-        printMessage(message->line2, i);
-    }
+    if (i >= cols) return;
+    printMessage(lines[i].text, i);
     /* String cline = i == 0 ? message->line1 : message->line2;
     int linelength = cline.length();
     int offset = lineOffsets[i];
