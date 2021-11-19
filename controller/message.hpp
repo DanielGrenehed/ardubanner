@@ -1,6 +1,7 @@
 #ifndef MESSAGE_HPP
 #define MESSAGE_HPP
 
+#define MAX_STR_LEN 100;
 /*
 
     Message body(text)

@@ -47,7 +47,7 @@ void readSerial() {
     input[size] = 0; // Add the final 0 to end the C string
 
     if (size > 0) {
-      //printString(input);
+      msghand.addMessage(600, input, empty);
       //delay(100);
       processInput(input);
     } 

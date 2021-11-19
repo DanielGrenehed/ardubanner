@@ -1,4 +1,4 @@
-#include "messaghandler.hpp"
+#include "messagehandler.hpp"
 
 #define MAX_MESSAGES 12
 const float min_persent = 1.0/MAX_MESSAGES;
@@ -36,4 +36,16 @@ std::vector<std::string> MessageHandler::serializeCommands() {
         commands.push_back(command);
     }
     return commands;
+}
+
+std::vector<TimedMessage> MessageHandler::calculateTimedMessages() {
+    std::vector<TimedMessage> msgs;
+    removeZeroTimeMessages();
+    for(std::vector<Message>::iterator it = messages.begin(); it != messages.end(); ++it) {
+        int time = (((float)it->getAmmount())/(sum_paid)) * 60;
+        TimedMessage tmsg = {it->getText(), time};
+        //std::string command = std::to_string(time) + ":" + it->getText();
+        msgs.push_back(tmsg);
+    }
+    return msgs;
 }

@@ -3,19 +3,24 @@
 
 #include <vector>
 #include <memory>
+#include <thread>
 #include "serial.hpp"
-#include "messaghandler.hpp"
+#include "messagehandler.hpp"
+#include "displayupdater.hpp"
 
 class Menu {
 private:
     std::vector<std::shared_ptr<Serial> > ports;
     MessageHandler msghand;
+    std::vector<std::shared_ptr<DisplayUpdater> > updaters;
+    std::vector<std::thread> threads;
 
     void printMenu();
 
 public:
-    Menu(std::vector<std::shared_ptr<Serial> > ports) : ports(ports) {}
+    Menu(std::vector<std::shared_ptr<Serial> > ports);
 
+    ~Menu();
     void show();
 
 protected:

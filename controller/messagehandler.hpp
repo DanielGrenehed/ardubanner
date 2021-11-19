@@ -4,6 +4,7 @@
 //keybr.com
 #include "message.hpp"
 #include <vector>
+#include "timedmessage.hpp"
 
 class MessageHandler {
 private:
@@ -17,6 +18,8 @@ public:
     void removeZeroTimeMessages();
     
     std::vector<std::string> serializeCommands();
+
+    std::vector<TimedMessage> calculateTimedMessages();
 };
 
 #endif /* ifndef MESSAGEMANDLER_HPP */

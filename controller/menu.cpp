@@ -5,10 +5,26 @@
 #include <random>
 
 
+Menu::Menu(std::vector<std::shared_ptr<Serial> > ports) : ports(ports) {
+    for (int i=0; i < ports.size(); i++) {
+        //std::shared_ptr<DisplayUpdater> updtr;
+        updaters.push_back((std::shared_ptr<DisplayUpdater>)(new DisplayUpdater()));
+        threads.push_back(std::thread(UpdateDisplay, updaters[i], ports[i]));
+    }
+}
+Menu::~Menu() {
+    for (int i = 0; i < updaters.size(); i++) {
+        updaters[i]->stop();
+    }
+    for (int i  = 0; i < threads.size(); i++) {
+        threads[i].join();
+    }
+    threads.clear();
+    updaters.clear();
+}
 
 void Menu::printMenu() {
     std::cout << "1: Purchase ad\n";
-    std::cout << "2: Update displays\n";
     std::cout << "0: Quit\n";
     std::cout << "Enter your choice:\n";
 }
@@ -24,13 +40,19 @@ void Menu::show() {
             case 1:
             addMessage();
             break;
-            case 2:
-            updateSerial();
-            break;
 
         }
     }
 
+}
+
+static std::string getLine(bool &success) {
+    std::string text;
+    std::getline(std::cin, text);
+    std::cin.clear();
+    fflush(stdin);
+    if (text.length() >= 90) success = false;
+    return text;
 }
 
 void Menu::addMessage() {
@@ -40,16 +62,31 @@ void Menu::addMessage() {
     std::cin.clear();
     fflush(stdin);
     std::string text;
-    std::cout << "Enter message to be displayed, use '|' for newline:\n";
-    std::getline(std::cin, text);
-    std::cin.clear();
-    fflush(stdin);
+    std::cout << "Enter first line:\n";
+    bool success = true;
+    text += getLine(success);
+    if (!success) {
+        std::cout << "Your text is exceeding the limits\n";
+        return;
+    }
+    text += '|' + getLine(success);
+    if (!success) {
+        std::cout << "Your text is exceeding the limits\n";
+        return;
+    }
 
     msghand.addMessage(ammount, text);
+    updateSerial();
 }
 
 void Menu::updateSerial() {
-    std::vector<std::string> commands = msghand.serializeCommands();
+    std::vector<TimedMessage> messages = msghand.calculateTimedMessages();
+    std::default_random_engine e(0);
+    for (std::vector<std::shared_ptr<DisplayUpdater> >::iterator it = updaters.begin(); it != updaters.end(); ++it) {
+        std::shuffle(messages.begin(), messages.end(), e);
+        (*it)->setData(messages);
+    }
+    /* std::vector<std::string> commands = msghand.serializeCommands();
     std::string header = "U:"+ std::to_string(commands.size());
     std::default_random_engine e(0);
     for (std::vector<std::shared_ptr<Serial> >::iterator pit = ports.begin(); pit != ports.end(); ++pit) {
@@ -72,5 +109,5 @@ void Menu::updateSerial() {
             (*pit)->writeToPort(temp, strlen(temp));
             std::cout << temp;
         }
-    }
+    } */
 }
