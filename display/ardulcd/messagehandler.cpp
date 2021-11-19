@@ -9,7 +9,7 @@ const char* MessageHandler::secondLine() {
     return messages[current].line2;
 }
 
-Message* MessageHandler::Message() {
+Message* MessageHandler::getMessage() {
     return &messages[current];
 }
 
@@ -49,9 +49,11 @@ void MessageHandler::reset() {
 
 bool MessageHandler::addMessage(int time, char* l1, char* l2) {
     if (size+1 == MAX_MESSAGES || strlen(l1) > MAX_STR_LEN || strlen(l2) > MAX_STR_LEN) return false;
-    messages[size].displayTime = time;
     strcpy(messages[size].line1, l1);
+    messages[size].line1[MAX_STR_LEN-1] = 0;
     strcpy(messages[size].line2, l2);
+    messages[size].line2[MAX_STR_LEN-1] = 0;
+    messages[size].displayTime = time;
     size++;
     return true;
 }

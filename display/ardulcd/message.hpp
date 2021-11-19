@@ -2,9 +2,9 @@
 #define MESSAGE_H
 #include "util.hpp"
 
-struct Message {
+typedef struct Message {
   int displayTime;
   char line1[MAX_STR_LEN], line2[MAX_STR_LEN]; 
-};
+} Message;
 
 #endif /* ifndef MESSAGE_H */

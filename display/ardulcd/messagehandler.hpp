@@ -1,7 +1,7 @@
 #ifndef MESSAGEHANDLER_HPP
 #define MESSAGEHANDLER_HPP
 
-#include "message.h"
+#include "message.hpp"
 
 class MessageHandler {
 private:
@@ -12,7 +12,7 @@ private:
 public:
   const char* firstLine();
   const char* secondLine();
-  Message* Message();
+  Message* getMessage();
   bool isEmpty();
   int getSize();
   bool update(unsigned long time);

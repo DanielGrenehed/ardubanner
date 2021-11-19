@@ -19,6 +19,7 @@ Display disp(DISPLAY_WIDTH, DISPLAY_HEIGHT, 12, 11, 5, 4, 3, 2);
 // Display disp(DISPLAY_WIDTH, DISPLAY_HEIGHT, lcd);
 MessageHandler msghand;
 unsigned long lastTime = 0;
+char empty[]="";
 
 
 /*
@@ -29,7 +30,7 @@ Setup
 void setup() {
   Serial.begin(BAUD);
   pinMode(led, OUTPUT);
-  disp.setMessage(msghand.Message());
+  disp.setMessage(msghand.getMessage());
   disp.update();
 }
 
@@ -86,7 +87,7 @@ void readMessageFromSerial() {
       ++str2;
       if (!msghand.addMessage(time, token, str2));
     } else {
-      if (!msghand.addMessage(time, token, ""));
+      if (!msghand.addMessage(time, token, empty));
     }
   }
 
@@ -106,7 +107,7 @@ void updateDisplay() {
 void nextMessage(unsigned long time) {
   /// update display only when there is a new message to be displayed
   if (msghand.update(time)) {
-    disp.setMessage(msghand.Message());
+    disp.setMessage(msghand.getMessage());
     disp.update();
   }
 }

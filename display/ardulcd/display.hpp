@@ -2,7 +2,7 @@
 #define DISPLAY_HPP
 #include <LiquidCrystal.h>
 
-#include "message.h"
+#include "message.hpp"
 
 class Display {
 private:
@@ -32,7 +32,7 @@ private:
   void resetScroll();
 
   void printLine(int i);
-  
+  void printMessage(const char* line, int row);
 };
 
 #endif /* ifndef DISPLAY_HPP */

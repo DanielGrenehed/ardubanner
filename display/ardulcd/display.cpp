@@ -59,7 +59,12 @@ void Display::resetScroll() {
 }
 
 void Display::printLine(int i) {
-    String cline = i == 0 ? message->line1 : message->line2;
+    if (i == 0) {
+        printMessage(message->line1, i);
+    } else if (i == 1) {
+        printMessage(message->line2, i);
+    }
+    /* String cline = i == 0 ? message->line1 : message->line2;
     int linelength = cline.length();
     int offset = lineOffsets[i];
      
@@ -73,11 +78,21 @@ void Display::printLine(int i) {
     
     m_lcd.setCursor(0, i);
     if (i < 2) m_lcd.print(line); 
-    else m_lcd.print("");
+    else m_lcd.print(""); */
 }
-/*
+
 void Display::printMessage(const char* line, int row) {
     char out[cols+1];
-    int pos= 0;
+    out[cols] = 0;
+    int pos= 0; 
 
-} */
+    for (int i = lineOffsets[row]; pos < cols && i < strlen(line); i++) out[pos++] = line[i];
+    if (lineOffsets[row] > 0) {
+        for (int i = 0; pos < cols && i < spacing; i++) out[pos++] = ' ';
+        for (int i = 0; pos < cols && i < strlen(line); i++) out[pos++] = line[i];
+    }
+    for (;pos < cols;) out[pos++] = ' ';
+    
+    m_lcd.setCursor(0, row);
+    m_lcd.print(out);
+} 
