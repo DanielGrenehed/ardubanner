@@ -19,3 +19,6 @@ build with ./build.sh
 then run with ./controller and the paths to the ports to use.
 
 ### Windows
+In the /controller folder,
+build with ./buildWindows.bat
+then run with ./controller.exe and the paths to the ports to use.
