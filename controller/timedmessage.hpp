@@ -2,7 +2,7 @@
 #define TIMEDMESSAGE_HPP
 
 typedef struct {
-    std::string msg;
+    std::string message;
     int time;
 } TimedMessage;
 

@@ -9,25 +9,26 @@
 Menu::Menu(std::vector<std::shared_ptr<Serial> > ports) : ports(ports) {
     for (int i=0; i < ports.size(); i++) {
         //std::shared_ptr<DisplayUpdater> updtr;
-        updaters.push_back((std::shared_ptr<DisplayUpdater>)(new DisplayUpdater()));
-        threads.push_back(std::thread(UpdateDisplay, updaters[i], ports[i]));
+        shared_data.push_back((std::shared_ptr<ThreadData>)(new ThreadData()));
+        threads.push_back(std::thread(UpdateDisplay, shared_data[i], ports[i]));
     }
 }
 Menu::~Menu() {
-    for (int i = 0; i < updaters.size(); i++) {
-        updaters[i]->stop();
+    for (int i = 0; i < shared_data.size(); i++) {
+        shared_data[i]->stop();
     }
     for (int i  = 0; i < threads.size(); i++) {
         threads[i].join();
     }
     threads.clear();
-    updaters.clear();
+    shared_data.clear();
 }
 
 void Menu::printMenu() {
     std::cout << "1: Purchase ad\n";
     std::cout << "2: Load from file\n";
     std::cout << "3: Save to file\n";
+    std::cout << "4: Print messages\n";
     std::cout << "0: Quit\n";
     std::cout << "Enter your choice:\n";
 }
@@ -48,6 +49,9 @@ void Menu::show() {
             break;
             case 3:
             saveToFile();
+            break;
+            case 4:
+            printMessages();
             break;
 
         }
@@ -85,13 +89,13 @@ void Menu::addMessage() {
         return;
     }
     std::cout << "Enter your company name: \n";
-    std::string cpnynm = getLine(success);
+    std::string author = getLine(success);
     if (!success) {
         std::cout << "That is not an acceptible company name!!\n";
         return;
     }
 
-    if (!msghand.addMessage(ammount, text, cpnynm)) {
+    if (!message_handler.addMessage({ammount, text, author})) {
         std::cout << "Failed to add message!\n";
         return;
     }
@@ -99,9 +103,9 @@ void Menu::addMessage() {
 }
 
 void Menu::updateSerial() {
-    std::vector<TimedMessage> messages = msghand.calculateTimedMessages();
+    std::vector<TimedMessage> messages = message_handler.calculateTimedMessages();
     std::default_random_engine e(0);
-    for (std::vector<std::shared_ptr<DisplayUpdater> >::iterator it = updaters.begin(); it != updaters.end(); ++it) {
+    for (std::vector<std::shared_ptr<ThreadData> >::iterator it = shared_data.begin(); it != shared_data.end(); ++it) {
         std::shuffle(messages.begin(), messages.end(), e);
         (*it)->setData(messages);
     }
@@ -121,6 +125,10 @@ static Message messageFromLine(std::string line) {
     return Message(amount, msg, author);
 }
 
+void Menu::addMessagesFromLines(std::vector<std::string> lines) {
+    for (int i = 0; i < lines.size(); i++) message_handler.addMessage(messageFromLine(lines[i]));
+}
+
 void Menu::loadFromFile() {
     bool success = true;
     std::cout << "Enter file to load from:\n";
@@ -130,17 +138,23 @@ void Menu::loadFromFile() {
         std::cout << "Failed to load from '" + filename + "'\n";
         return;
     }
-    msghand.clear();
-    for (int i = 0; i < lines.size(); i++) {
-        msghand.addMessage(messageFromLine(lines[i]));
-    }
+
+    message_handler.clear();
+    addMessagesFromLines(lines);
+
+    updateSerial();
 }
 
 void Menu::saveToFile() {
     bool success = true;
     std::cout << "Enter file to save to:\n";
     std::string filename = getLine(success);
-    if (!writeLinesToFile(msghand.serialize(), filename)) {
+    if (!writeLinesToFile(message_handler.serialize(), filename)) {
         std::cout << "Could not write to file '" + filename + "'!\n";
     }
+}
+
+void Menu::printMessages() {
+    std::vector<std::string> cerial = message_handler.serialize();
+    for (int i = 0; i < cerial.size(); i++) std::cout << cerial[i] << std::endl;
 }

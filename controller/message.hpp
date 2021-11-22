@@ -11,13 +11,13 @@
 
 class Message {
 private:
-    std::string msg, athr;
+    std::string message, author;
     int paid;
 public:
-    Message(int ammount, std::string message, std::string author): msg(message), athr(author), paid(ammount){}
+    Message(int ammount, std::string aMessage, std::string author): message(aMessage), author(author), paid(ammount){}
     
-    std::string getText() {return msg;}
-    std::string getAuthor() {return athr;}
+    std::string getText() {return message;}
+    std::string getAuthor() {return author;}
     int getAmmount() {return paid;}
 
 
