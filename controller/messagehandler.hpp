@@ -13,11 +13,13 @@ private:
 public:
     MessageHandler(): sum_paid(0) {}
 
-    bool addMessage(int ammount, std::string msg);
+    bool addMessage(int ammount, std::string msg, std::string author);
+    bool addMessage(Message m);
 
     void removeZeroTimeMessages();
+    void clear();
     
-    std::vector<std::string> serializeCommands();
+    std::vector<std::string> serialize();
 
     std::vector<TimedMessage> calculateTimedMessages();
 };
